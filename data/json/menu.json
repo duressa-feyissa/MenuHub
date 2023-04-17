@@ -1,0 +1,23 @@
+{
+  "hotelId": "643c8cef0f0d079baee29a4d",
+  "name": "Veggie Burger",
+  "description": "Delicious veggie burger with a special sauce",
+  "ingredients": [
+    "Lentil Patty",
+    "Bun",
+    "Lettuce"
+  ],
+  "price": 9.99,
+  "allergenInformation": "Contains gluten and dairy",
+  "nutritionalInformation": [
+    "Protein: 15g",
+    "Carbs: 30g",
+    "Fat: 10g"
+  ],
+  "vegetarian": "Vegetarian",
+  "images": [],
+  "type": "Main Course",
+  "availability": "Available all day",
+  "rating": 0,
+  "reviews": []
+}

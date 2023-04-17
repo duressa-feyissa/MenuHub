@@ -1,14 +1,24 @@
+const { OrderItem, validate } = require('../models/orderItem');
+const { Menu } = require('../models/menu');
 const express = require('express');
 const mongoose = require('mongoose');
+const authenticate = require('../middleWare/authentication');
+const authorize = require('../middleWare/authorization');
 const router = express.Router();
-const { OrderItem, validate } = require('../models/orderItem');
 
 router.get('/', async (req, res) => {
   const orderItems = await OrderItem.find();
   res.send(orderItems);
 });
 
-router.post('/', async (req, res) => {
+router.get('/:id', async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id))
+    return res.status(400).send('Invalid order item Id');
+  const orderItems = await OrderItem.findById(req.params.id);
+  res.send(orderItems);
+});
+
+router.post('/',  authenticate, authorize(['Customer', 'Waiter']), async (req, res) => {
   const { error } = validate(req.body);
   if (error) 
       return res.status(400).json({ error: error.details[0].message });
@@ -20,7 +30,7 @@ router.post('/', async (req, res) => {
   if (!menuItem)
     return res.status(404).send('Menu item not found');
 
-  const orderItem = new OrderItem({
+  let orderItem = new OrderItem({
     menuItemId: req.body.menuItemId,
     quantity: req.body.quantity,
     specialInstructions: req.body.specialInstructions,
@@ -30,7 +40,7 @@ router.post('/', async (req, res) => {
   res.status(201).send(orderItem);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, authorize(['Customer', 'Waiter']), async (req, res) => {
   if (!mongoose.isValidObjectId(req.params.id))
     return res.status(400).send('Invalid order item Id');
   
@@ -56,7 +66,7 @@ router.put('/:id', async (req, res) => {
   res.send(orderItem);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, authorize(['Customer', 'Waiter']), async (req, res) => {
   if (!mongoose.isValidObjectId(req.params.id))
     return res.status(400).send('Invalid order item Id');
   const orderItem = await OrderItem.findByIdAndDelete(req.params.id);

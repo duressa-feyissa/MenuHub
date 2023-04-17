@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "643c8cef0f0d079baee29a4d"
+  },
+  "name": "Sky Light",
+  "password": "$2b$10$0TRBcYEZp39E45kGrbo78OjE/Xrrw6280smJVrhKKp1s3dAq1Yw9a",
+  "location": {
+    "address": "1234 Street",
+    "city": "Addis Ababa",
+    "state": "Addis Ababa",
+    "country": "Ethiopia",
+    "postalCode": "1000"
+  },
+  "contact": {
+    "email": "skylight@gmail.com",
+    "phone": "+2519456789",
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/skylight",
+      "twitter": "https://www.twitter.com/skylight",
+      "instagram": "https://www.instagram.com/skylight"
+    }
+  },
+  "images": [
+    "1681691080458.jpg",
+    "1681691236685.jpg",
+    "1681691236698.jpg",
+    "1681691236705.jpg"
+  ],
+  "role": "Hotel",
+  "profileImage": "1681691080458.jpg",
+  "star": 5,
+  "__v": 2
+}]

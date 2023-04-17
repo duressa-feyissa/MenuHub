@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const config = require('config');
 
 const hotelSchema = new mongoose.Schema({
     name: {
@@ -60,6 +61,10 @@ const hotelSchema = new mongoose.Schema({
     },
     images: {
         type: [String],
+    },  
+    role: {
+        type: String,
+        default: 'Hotel'
     },
     profileImage: {
         type: String,
@@ -78,9 +83,10 @@ hotelSchema.methods.generateToken = function () {
         _id: this._id, 
         name: this.name, 
         profileImage: this.profileImage,
+        role: this.role,
         star: this.star,
     }
-    const token = jwt.sign(data, '1234');
+    const token = jwt.sign(data, config.get('API_Private_Key'));
     return token;
 }
 

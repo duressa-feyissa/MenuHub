@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu Item Creation</title>
+</head>
+<body>
+    <h1>Create Menu Item</h1>
+    <form id="menuForm" action="http://localhost:3001/api/menus" method="post" enctype="multipart/form-data">
+        <label for="hotelId">Hotel ID:</label>
+        <input type="text" id="hotelId" name="hotelId" value="6438938cc7fc58bf62fc7bb4" required><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="Veggie Burger" required><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description">Delicious veggie burger with a special sauce</textarea><br>
+        <label for="ingredients">Ingredients:</label>
+        <input type="text" id="ingredients1" name="ingredients[]" value="Lentil Patty" required><br>
+        <input type="text" id="ingredients2" name="ingredients[]" value="Bun" required><br>
+        <input type="text" id="ingredients3" name="ingredients[]" value="Lettuce" required><br>
+        <!-- Add more input fields for each ingredient -->
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" value="9.99" required><br>
+        <label for="allergenInformation">Allergen Information:</label>
+        <textarea id="allergenInformation" name="allergenInformation">Contains gluten and dairy</textarea><br>
+        <label for="nutritionalInformation">Nutritional Information:</label>
+        <input type="text" id="nutritionalInformation1" name="nutritionalInformation[]" value="Protein: 15g" required><br>
+        <input type="text" id="nutritionalInformation2" name="nutritionalInformation[]" value="Carbs: 30g" required><br>
+        <input type="text" id="nutritionalInformation3" name="nutritionalInformation[]" value="Fat: 10g" required><br>
+        <!-- Add more input fields for each nutritional information -->
+        <label for="vegetarian">Vegetarian:</label>
+        <select id="vegetarian" name="vegetarian" required>
+            <option value="Vegetarian" selected>Vegetarian</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Non-vegetarian">Non-vegetarian</option>
+        </select><br>
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" value="burger.jpeg" multiple><br>
+        <label for="type">Type:</label>
+        <select id="type" name="type" required>
+            <option value="Appetizer">Appetizer</option>
+            <option value="Main Course" selected>Main Course</option>
+            <option value="Dessert">Dessert</option>
+        </select><br>
+        <label for="availability">Availability:</label>
+        <select id="availability" name="availability" required>
+            <option value="Available all day" selected>Available all day</option>
+            <option value="Breakfast only">Breakfast only</option>
+            <option value="Lunch only">Lunch only</option>
+            <option value="Dinner only">Dinner only</option>
+            <option value="Lunch and dinner only">Lunch and dinner only</option>
+        </select><br>
+        <input type="submit" value="Create">
+    </form>
+</body>
+</html>

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const Joi = require('joi'); 
+const jwt = require('jsonwebtoken');
+const Joi = require('joi');
+const config = require('config');
 
 const waiterSchema = new mongoose.Schema({
   hotelId: {
@@ -9,13 +11,13 @@ const waiterSchema = new mongoose.Schema({
   },
   firstName: {
     type: String,
-    minlength: 4,
+    minlength: 3,
     maxlength: 50,
     required: true
   },
   lastName: {
     type: String,
-    minlength: 4,
+    minlength: 3,
     maxlength: 50,
     required: true
   },
@@ -27,11 +29,15 @@ const waiterSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     required: true
+  },  
+  role: {
+    type: String,
+    default: 'Waiter'
   },
   password: {
     type: String,
-    minlength: 3,
-    maxlength: 50,
+    minlength: 6,
+    maxlength: 100,
     required: true
   },
   image: {
@@ -46,9 +52,10 @@ waiterSchema.methods.generateToken = function () {
       firstName: this.firstName, 
       lastName: this.lastName,
       hotelId: this.hotelId,
+      role: this.role,
       image: this.image
   }
-  const token = jwt.sign(data, '1234');
+  const token = jwt.sign(data, config.get('API_Private_Key'));
   return token;
 }
 
@@ -57,11 +64,11 @@ const Waiter = mongoose.model('Waiter', waiterSchema);
 function validateWaiter(waiter) { 
   const schema = Joi.object({
     hotelId: Joi.string().required(),
-    firstName: Joi.string().min(4).max(50).required(),
-    lastName: Joi.string().min(4).max(50).required(),
+    firstName: Joi.string().min(3).max(50).required(),
+    lastName: Joi.string().min(3).max(50).required(),
     email: Joi.string().required().email(),
     phoneNumber: Joi.string().required(),
-    password: Joi.string().min(3).max(50).required(),
+    password: Joi.string().min(6).max(100).required(),
     image: Joi.string().default('waiter.png')
   });
   return schema.validate(waiter);
@@ -70,8 +77,9 @@ function validateWaiter(waiter) {
 function validateWaiterUpdate(waiter) { 
   const schema = Joi.object({
       hotelId: Joi.string().required(),
-      firstName: Joi.string().min(4).max(50).required(),
-      lastName: Joi.string().min(4).max(50).required(),
+      email: Joi.string().required().email(),
+      firstName: Joi.string().min(3).max(50).required(),
+      lastName: Joi.string().min(3).max(50).required(),
       phoneNumber: Joi.string().required(),
   });
   return schema.validate(waiter);

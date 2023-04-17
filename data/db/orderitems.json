@@ -1,0 +1,12 @@
+[{
+  "_id": {
+    "$oid": "643c9dca668daf476b44588c"
+  },
+  "menuItemId": {
+    "$oid": "643c9471777eadc13f041973"
+  },
+  "quantity": 5,
+  "specialInstructions": "No onions",
+  "price": 9.99,
+  "__v": 0
+}]

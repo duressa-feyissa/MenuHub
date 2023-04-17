@@ -30,9 +30,9 @@ function validateOrderItem(orderItem) {
         quantity: Joi.number().min(1).required(),
         specialInstructions: Joi.string(),
         price: Joi.number().required(),
-    })
+    });
+    return schema.validate(orderItem);
 }
 
-exports.orderItemSchema = orderItemSchema;
 exports.validate = validateOrderItem;
 exports.OrderItem = OrderItem;

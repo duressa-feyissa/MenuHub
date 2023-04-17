@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "643c9a5651ebb29348bc1787"
+  },
+  "firstName": "Shupi",
+  "lastName": "Feyisa",
+  "email": "johndoe@example.com",
+  "phoneNumber": "0974244998",
+  "role": "Customer",
+  "password": "$2b$10$AgyS/bvT8Vf.fEf.9hZxO.9sHwYMDfqJkcyXZ0tLoQPNlvhcEHh5i",
+  "image": "customer.png",
+  "__v": 0
+}]

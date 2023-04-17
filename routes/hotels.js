@@ -1,4 +1,6 @@
 const { Hotel , validate } = require('../models/hotel');
+const authenticate = require('../middleWare/authentication');
+const authorize = require('../middleWare/authorization');
 const _ = require('lodash');
 const bcrpt = require('bcrypt');
 const mongoose = require('mongoose');
@@ -25,9 +27,8 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     
-    if (!mongoose.isValidObjectId(req.body.hotelId)) {
+    if (!mongoose.isValidObjectId(req.params.id))
         return res.status(400).send('Invalid hotel Id');
-    }
     
     let hotel = await Hotel.findById(req.params.id);
     if (!hotel)
@@ -44,7 +45,7 @@ router.post('/', async (req, res) => {
     
     let hotel = await Hotel.findOne({ email: req.body.email });
     
-    if (hotel.contact.email === req.body.contact.email)
+    if (hotel)
         return res.status(400).send('User already registered!');
     
     const salt = await bcrpt.genSalt(10);
@@ -76,9 +77,9 @@ router.post('/', async (req, res) => {
     res.status(201).send(token);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, authorize(['Hotel']), async (req, res) => {
     
-    if (!mongoose.isValidObjectId(req.body.hotelId)) {
+    if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid hotel Id');
     }
     
@@ -107,16 +108,16 @@ router.put('/:id', async (req, res) => {
         star: req.body.star,
     };
     
-    const hotel = await Hotel.findByIdAndUpdate(req.params.id, hotelObj, {new: true});
+    let hotel = await Hotel.findByIdAndUpdate(req.params.id, hotelObj, {new: true});
     if (!hotel)
         return res.status(404).send('The hotel with given ID not found\n');
     hotel = _.omit(hotel.toObject(), 'password');
     res.status(200).send(hotel);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',  async (req, res) => {
     
-    if (!mongoose.isValidObjectId(req.body.hotelId)) {
+    if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid hotel Id');
     }
     
@@ -127,9 +128,9 @@ router.delete('/:id', async (req, res) => {
     res.status(200).send(hotel); 
 });
 
-router.get('/:id/qr-generator', async (req, res) => {
+router.get('/:id/qr-generator', authenticate, authorize(['Hotel']), async (req, res) => {
     
-    if (!mongoose.isValidObjectId(req.body.hotelId)) {
+    if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid hotel Id');
     }
     
@@ -143,9 +144,9 @@ router.get('/:id/qr-generator', async (req, res) => {
     }
 });
 
-router.post('/:id/profile-upload', upload.single('file'), async (req, res) => {
+router.post('/:id/profile-image', authenticate, authorize(['Hotel']), upload.single('image'), async (req, res) => {
     
-    if (!mongoose.isValidObjectId(req.body.hotelId)) {
+    if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid hotel Id');
     }
     
@@ -164,9 +165,9 @@ router.post('/:id/profile-upload', upload.single('file'), async (req, res) => {
     res.status(200).send('Profile image uploaded successfully');
 });
 
-router.post('/:id/images', upload.array('images'), async (req, res) => {
+router.post('/:id/images', authenticate, authorize(['Hotel']), upload.array('images'), async (req, res) => {
     
-    if (!mongoose.isValidObjectId(req.body.hotelId)) {
+    if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid hotel Id');
     }
     

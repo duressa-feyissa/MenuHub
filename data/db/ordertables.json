@@ -1,0 +1,25 @@
+[{
+  "_id": {
+    "$oid": "643c9f2f72d1f5e1150929a0"
+  },
+  "customerId": {
+    "$oid": "643c9a5651ebb29348bc1787"
+  },
+  "waiterId": {
+    "$oid": "643c9b35f24d9627f8023fab"
+  },
+  "tableNumber": 10,
+  "items": [
+    {
+      "$oid": "643c9dca668daf476b44588c"
+    }
+  ],
+  "orderDate": {
+    "$date": "2023-04-17T01:21:51.136Z"
+  },
+  "status": "Ready",
+  "totalAmount": 50,
+  "paymentMethod": "Card",
+  "paymentStatus": "Pending",
+  "__v": 0
+}]

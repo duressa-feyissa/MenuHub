@@ -1,0 +1,12 @@
+{
+  "customerId": "643c9a5651ebb29348bc1787",
+  "waiterId": "643c9b35f24d9627f8023fab",
+  "tableNumber": 10,
+  "items": [
+    "643c9dca668daf476b44588c"
+  ],
+  "status": "Ready",
+  "totalAmount": 50,
+  "paymentMethod": "Card",
+  "paymentStatus": "Pending"
+}

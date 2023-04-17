@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "643c9b1ef24d9627f8023fa6"
+  },
+  "hotelId": {
+    "$oid": "643c8cef0f0d079baee29a4d"
+  },
+  "firstName": "kena",
+  "lastName": "Feyisa",
+  "email": "johndoe@example.com",
+  "phoneNumber": "0974244998",
+  "role": "Chief",
+  "password": "$2b$10$fy.SUPc3XZRzb0I1OQwk0ugMiOW4a4uiWyBydCFUKKYfZbXX8aktq",
+  "image": "chief.png",
+  "__v": 0
+}]

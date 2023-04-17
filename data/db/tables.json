@@ -1,0 +1,14 @@
+[{
+  "_id": {
+    "$oid": "643ca19c5a4ea71b6bb13234"
+  },
+  "hotelId": {
+    "$oid": "643c8cef0f0d079baee29a4d"
+  },
+  "waiterId": [
+    {
+      "$oid": "643c9b35f24d9627f8023fab"
+    }
+  ],
+  "__v": 0
+}]

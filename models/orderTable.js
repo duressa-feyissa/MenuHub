@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema({
   waiterId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Waiter',
-      required: false
+      required: true
   },
   tableNumber: {
       type: Number,
@@ -22,11 +22,12 @@ const orderSchema = new mongoose.Schema({
   },
   orderDate: {
       type: Date,
-      default: Date.now
+      default: Date.now,
+      required: true
   },
   status: {
       type: String,
-      enum: ['Placed', 'Confirmed', 'Cancelled'],
+      enum: ['Placed', 'Confirmed', 'Cancelled', 'Ready'],
       default: 'Placed'
   },
   totalAmount: {
@@ -49,18 +50,17 @@ const orderSchema = new mongoose.Schema({
 
 const OrderTable = mongoose.model('OrderTable', orderSchema);
 
-const validateOrder = (order) => {
+const validateOrder = function (order) {
     const schema = Joi.object({
         customerId: Joi.string().required(),
-        waiterId: Joi.string(),
+        waiterId: Joi.string().required(),
         tableNumber: Joi.number().required(),
-        items: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required(),
-        orderDate: Joi.date().default(Date.now, 'current date'),
-        status: Joi.string().valid('Placed', 'Confirmed', 'Cancelled').default('Placed'),
+        items: Joi.array().items(Joi.string()).required(),
+        status: Joi.string().valid('Placed', 'Confirmed', 'Cancelled', 'Ready').default('Placed'),
         totalAmount: Joi.number().required().default(0),
         paymentMethod: Joi.string().valid('Cash', 'Card').required(),
         paymentStatus: Joi.string().valid('Pending', 'Paid').required().default('Pending')
-    });
+      });
     return schema.validate(order);
 };
 

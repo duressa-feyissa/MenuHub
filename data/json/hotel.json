@@ -1,0 +1,24 @@
+{
+  "name": "Sky Light",
+  "password": "12345678",
+  "location": {
+    "address": "1234 Street",
+    "city": "Addis Ababa",
+    "state": "Addis Ababa",
+    "country": "Ethiopia",
+    "postalCode": "1000"
+  },
+  "contact": {
+    "email": "skylight@gmail.com",
+    "phone": "+2519456789",
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/skylight",
+      "twitter": "https://www.twitter.com/skylight",
+      "instagram": "https://www.instagram.com/skylight"
+    }
+  },
+  "images": [],
+  "profileImage": "hotel.jpeg",
+  "star": 5
+}
+
