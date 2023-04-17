@@ -9,9 +9,9 @@
 - First set enviromental variable for `MenuHub_Private_Key`.
    - Example: `export MenuHub_Private_Key="1234"`
 - `nodemon` or `node index.js`
-
 <br/>
-
+<hr/>
+<br/>
 <h2><b>Prerequisites</b></h2>
 
 - Before running the API, make sure you have the following dependencies installed:
@@ -320,27 +320,40 @@
 - Description: Generates a QR code for a specific table in a specific hotel.
 - Authentication: Required
 - Authorization: Required (Role: Hotel)
-<br/><br/>
 
+<br/>
+<hr/>
+<br/>
 <h2><b>Error Handling</b></h2>
 
 - The API includes error handling for invalid request parameters, duplicate hotel registrations, not found errors, and server errors. Proper error responses are sent with appropriate status codes and error messages for easy troubleshooting.
-<br/><br/>
-
+<br/>
+<hr/>
+<br/>
 <h2><b> Contributing </b> </h2>
 
 - If you would like to contribute to this API, you can fork the repository, make changes, and submit a pull request. Please follow the code style and contribute to the documentation as needed. All contributions are welcome!
 <br/><br/>
 
+<br/>
+<hr/>
+<br/>
 <h2><b>License</b></h2>
 
 - This API is released under the MIT License. You can find the license information in the LICENSE file.
 <br/><br/>
 
+<br/>
+<hr/>
+<br/>
 <h2><b2>Credits</b></h2>
 
 - This API was developed by [Your Name] and is based on the hotel-api template. It uses various open-source libraries and tools. Thank you to all the contributors of these libraries for their hard work and contributions to the open-source community.
 <br/><br/>
+
+<br/>
+<hr/>
+<br/>
 <h2><b>Contact</b></h2>
 
 - If you have any questions or issues, please feel free to contact  `Duresa Feyisa`  at  `duresafeyisa2023@gmail.com`  or  ` Bisrat kebere`  at  ` `.
