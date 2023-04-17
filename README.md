@@ -1,4 +1,4 @@
-#MenuHub API
+`#MenuHub API`
 - This is a RESTful API for managing hotels menu. It allows users to perform various CRUD operations (Create, Read, Update, Delete), as well as generate QR codes for hotels and upload profile images for hotels, customers. The API is built using Node.js, Express, and Mongoose, and is secured with authentication and authorization middleware.
 
 
