@@ -1,9 +1,9 @@
 <h1><b>MenuHub API</b></h1>
 
 - This is a RESTful API for managing hotels menu. It allows users to perform various CRUD operations (Create, Read, Update, Delete), as well as generate QR codes for hotels and upload profile images for hotels, customers. The API is built using Node.js, Express, and Mongoose, and is secured with authentication and authorization middleware.
-
+<br/>
 <hr/>
-
+<br/>
 <h2><b>Run</b></h2>
 
 - First set enviromental variable for `MenuHub_Private_Key`.
@@ -33,6 +33,8 @@
 
 - You can install these dependencies using npm or yarn by running npm install or yarn install in the project directory.
 
+<br/>
+<hr/>
 <br/>
 
 <h2><b>Authentication and Authorization</b></h2>
