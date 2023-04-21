@@ -14,6 +14,7 @@ const error = require('../middleWare/error');
 
 module.exports = function(app) {
     app.use(express.json());
+    app.use(cors);
     app.use('/api/customers', customers);
     app.use('/api/hotels', hotels);
     app.use('/api/menus', menus);
@@ -23,7 +24,6 @@ module.exports = function(app) {
     app.use('/api/chiefs', chiefs);
     app.use('/api', auth);
     app.use('/api', tables);
-    app.use(cors);
     app.use(multerError);
     app.use(error);
 }
