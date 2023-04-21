@@ -40,6 +40,9 @@ router.post('/', authenticate, authorize(['Hotel']), upload.array('image'), asyn
     if (error) {
         return res.status(400).send(error.details[0].message);
     }
+    const array = [];
+    if  (req.files) 
+        req.files.map(file => file.filename);
 
     let menuItem = new Menu({
         hotelId: req.body.hotelId ,
@@ -50,7 +53,7 @@ router.post('/', authenticate, authorize(['Hotel']), upload.array('image'), asyn
         allergenInformation: req.body.allergenInformation,
         nutritionalInformation: req.body.nutritionalInformation,
         vegetarian: req.body.vegetarian,
-        images: req.files.map(file => file.filename),
+        images: array,
         type: req.body.type,
         availability: req.body.availability,
         rating: req.body.rating,
