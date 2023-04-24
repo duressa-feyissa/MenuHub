@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
     if (error)
         return res.status(400).send(error.details[0].message);
     
-    let hotel = await Hotel.findOne({ email: req.body.email });
+    let hotel = await Hotel.findOne({ 'constact.email': req.body.contact.email });
     
     if (hotel)
         return res.status(400).send('User already registered!');

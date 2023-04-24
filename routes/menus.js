@@ -35,6 +35,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', authenticate, authorize(['Hotel']), upload.array('image'), async (req, res) => {
+    console.log("req.files", req.files);
 
     const { error } = validate(req.body);
     if (error) {
@@ -63,6 +64,8 @@ router.post('/', authenticate, authorize(['Hotel']), upload.array('image'), asyn
 });
 
 router.put('/:id', authenticate, authorize(['Hotel']), async (req, res) => {
+    console.log("id", req.params.id)
+    console.log("body", req.body)
     
     if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid menu item Id');
