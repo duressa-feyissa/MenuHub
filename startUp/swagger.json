@@ -1,0 +1,2520 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Hotel Management API",
+    "version": "1.0.0",
+    "description": "API for managing hotel operations, reservations, and guest services"
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Hotel": {
+        "type": "object",
+        "required": ["name", "location", "contact"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Grand Royal Hotel"
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "example": "123 Main St"
+              },
+              "city": {
+                "type": "string",
+                "example": "Anytown"
+              },
+              "state": {
+                "type": "string",
+                "example": "Anystate"
+              },
+              "country": {
+                "type": "string",
+                "example": "Anyland"
+              },
+              "postalCode": {
+                "type": "string",
+                "example": "12345"
+              }
+            }
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "contact@grandroyalhotel.com"
+              },
+              "phone": {
+                "type": "string",
+                "example": "+1234567890"
+              },
+              "socialMedia": {
+                "type": "object",
+                "properties": {
+                  "facebook": {
+                    "type": "string",
+                    "example": "facebook.com/grandroyalhotel"
+                  },
+                  "twitter": {
+                    "type": "string",
+                    "example": "@grandroyalhotel"
+                  },
+                  "instagram": {
+                    "type": "string",
+                    "example": "@grandroyalhotel"
+                  }
+                }
+              }
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri",
+                "example": "http://example.com/image.jpg"
+              }
+            },
+            "star": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 7,
+              "example": 5
+            }
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          },
+          "star": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 7,
+            "example": 5
+          }
+        }
+      },
+      "MenuItem": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "description": "The ID of the hotel to which this menu item belongs."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the menu item."
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the menu item."
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of ingredients used in the menu item."
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the menu item."
+          },
+          "allergenInformation": {
+            "type": "string",
+            "description": "Information about allergens present in the menu item."
+          },
+          "nutritionalInformation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Nutritional information about the menu item."
+          },
+          "vegetarian": {
+            "type": "string",
+            "enum": ["Vegetarian", "Vegan", "Non-vegetarian"],
+            "description": "Indicates if the menu item is Vegetarian, Vegan, or Non-vegetarian."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": ["food.jpeg"],
+            "description": "URLs of images representing the menu item."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Appetizer", "Main Course", "Dessert"],
+            "description": "The type of menu item (e.g., Appetizer, Main Course, Dessert)."
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "Available all day",
+              "Breakfast only",
+              "Lunch only",
+              "Dinner only",
+              "Lunch and dinner only"
+            ],
+            "description": "Availability of the menu item throughout the day."
+          },
+          "rating": {
+            "type": "number",
+            "default": 0,
+            "description": "The rating of the menu item."
+          }
+        }
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "default": "Customer"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 100
+          },
+          "image": {
+            "type": "string",
+            "default": "customer.png"
+          }
+        }
+      },
+      "NewCustomer": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "$ref": "#/components/schemas/Customer/properties/firstName"
+          },
+          "lastName": {
+            "$ref": "#/components/schemas/Customer/properties/lastName"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Customer/properties/email"
+          },
+          "phoneNumber": {
+            "$ref": "#/components/schemas/Customer/properties/phoneNumber"
+          },
+          "password": {
+            "$ref": "#/components/schemas/Customer/properties/password"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "phoneNumber",
+          "password"
+        ]
+      },
+      "UpdateCustomer": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "$ref": "#/components/schemas/Customer/properties/firstName"
+          },
+          "lastName": {
+            "$ref": "#/components/schemas/Customer/properties/lastName"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Customer/properties/email"
+          },
+          "phoneNumber": {
+            "$ref": "#/components/schemas/Customer/properties/phoneNumber"
+          },
+          "password": {
+            "$ref": "#/components/schemas/Customer/properties/password"
+          },
+          "image": {
+            "$ref": "#/components/schemas/Customer/properties/image"
+          }
+        }
+      },
+      "Chief": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "default": "Chief"
+          },
+          "image": {
+            "type": "string",
+            "default": "chief.png"
+          }
+        }
+      },
+      "NewChief": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "$ref": "#/components/schemas/Chief/properties/firstName"
+          },
+          "lastName": {
+            "$ref": "#/components/schemas/Chief/properties/lastName"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Chief/properties/email"
+          },
+          "phoneNumber": {
+            "$ref": "#/components/schemas/Chief/properties/phoneNumber"
+          },
+          "password": {
+            "$ref": "#/components/schemas/Customer/properties/password"
+          }
+        },
+        "required": [
+          "hotelId",
+          "firstName",
+          "lastName",
+          "email",
+          "phoneNumber",
+          "password"
+        ]
+      },
+      "UpdateChief": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "$ref": "#/components/schemas/Chief/properties/firstName"
+          },
+          "lastName": {
+            "$ref": "#/components/schemas/Chief/properties/lastName"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Chief/properties/email"
+          },
+          "phoneNumber": {
+            "$ref": "#/components/schemas/Chief/properties/phoneNumber"
+          },
+          "password": {
+            "$ref": "#/components/schemas/Customer/properties/password"
+          },
+          "image": {
+            "$ref": "#/components/schemas/Chief/properties/image"
+          }
+        }
+      },
+      "Waiter": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "default": "Waiter"
+          },
+          "image": {
+            "type": "string",
+            "default": "waiter.png"
+          }
+        }
+      },
+      "NewWaiter": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "$ref": "#/components/schemas/Waiter/properties/firstName"
+          },
+          "lastName": {
+            "$ref": "#/components/schemas/Waiter/properties/lastName"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Waiter/properties/email"
+          },
+          "phoneNumber": {
+            "$ref": "#/components/schemas/Waiter/properties/phoneNumber"
+          },
+          "password": {
+            "$ref": "#/components/schemas/Customer/properties/password"
+          }
+        },
+        "required": [
+          "hotelId",
+          "firstName",
+          "lastName",
+          "email",
+          "phoneNumber",
+          "password"
+        ]
+      },
+      "UpdateWaiter": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "$ref": "#/components/schemas/Waiter/properties/firstName"
+          },
+          "lastName": {
+            "$ref": "#/components/schemas/Waiter/properties/lastName"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Waiter/properties/email"
+          },
+          "phoneNumber": {
+            "$ref": "#/components/schemas/Waiter/properties/phoneNumber"
+          },
+          "password": {
+            "$ref": "#/components/schemas/Customer/properties/password"
+          },
+          "image": {
+            "$ref": "#/components/schemas/Waiter/properties/image"
+          }
+        }
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "menuItemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "specialInstructions": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      },
+      "NewOrderItem": {
+        "type": "object",
+        "properties": {
+          "menuItemId": {
+            "$ref": "#/components/schemas/OrderItem/properties/menuItemId"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/OrderItem/properties/quantity"
+          },
+          "specialInstructions": {
+            "$ref": "#/components/schemas/OrderItem/properties/specialInstructions"
+          },
+          "price": {
+            "$ref": "#/components/schemas/OrderItem/properties/price"
+          }
+        },
+        "required": ["menuItemId", "quantity"]
+      },
+      "UpdateOrderItem": {
+        "type": "object",
+        "properties": {
+          "menuItemId": {
+            "$ref": "#/components/schemas/OrderItem/properties/menuItemId"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/OrderItem/properties/quantity"
+          },
+          "specialInstructions": {
+            "$ref": "#/components/schemas/OrderItem/properties/specialInstructions"
+          },
+          "price": {
+            "$ref": "#/components/schemas/OrderItem/properties/price"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waiterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tableNumber": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Placed", "Confirmed", "Cancelled", "Ready"]
+          },
+          "totalAmount": {
+            "type": "number"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": ["Cash", "Card"]
+          },
+          "paymentStatus": {
+            "type": "string",
+            "enum": ["Pending", "Paid"]
+          }
+        }
+      },
+      "NewOrder": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "$ref": "#/components/schemas/Order/properties/customerId"
+          },
+          "waiterId": {
+            "$ref": "#/components/schemas/Order/properties/waiterId"
+          },
+          "tableNumber": {
+            "$ref": "#/components/schemas/Order/properties/tableNumber"
+          },
+          "items": {
+            "$ref": "#/components/schemas/Order/properties/items"
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/Order/properties/paymentMethod"
+          }
+        },
+        "required": [
+          "customerId",
+          "waiterId",
+          "tableNumber",
+          "items",
+          "paymentMethod"
+        ]
+      },
+      "UpdateOrder": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "$ref": "#/components/schemas/Order/properties/customerId"
+          },
+          "waiterId": {
+            "$ref": "#/components/schemas/Order/properties/waiterId"
+          },
+          "tableNumber": {
+            "$ref": "#/components/schemas/Order/properties/tableNumber"
+          },
+          "items": {
+            "$ref": "#/components/schemas/Order/properties/items"
+          },
+          "status": {
+            "$ref": "#/components/schemas/Order/properties/status"
+          },
+          "totalAmount": {
+            "$ref": "#/components/schemas/Order/properties/totalAmount"
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/Order/properties/paymentMethod"
+          },
+          "paymentStatus": {
+            "$ref": "#/components/schemas/Order/properties/paymentStatus"
+          }
+        }
+      },
+      "Table": {
+        "type": "object",
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waiterId": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "tableNumber": {
+            "type": "integer"
+          }
+        }
+      },
+      "NewTable": {
+        "type": "object",
+        "properties": {
+          "waiterId": {
+            "$ref": "#/components/schemas/Table/properties/waiterId"
+          },
+          "tableNumber": {
+            "$ref": "#/components/schemas/Table/properties/tableNumber"
+          }
+        },
+        "required": ["waiterId", "tableNumber"]
+      },
+      "UpdateTable": {
+        "type": "object",
+        "properties": {
+          "waiterId": {
+            "$ref": "#/components/schemas/Table/properties/waiterId"
+          },
+          "tableNumber": {
+            "$ref": "#/components/schemas/Table/properties/tableNumber"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/hotels": {
+      "get": {
+        "summary": "List all hotels",
+        "operationId": "listHotels",
+        "parameters": [
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort hotels by name or star rating",
+
+            "schema": {
+              "type": "string",
+              "default": "name",
+              "enum": ["name", "star"]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort order (asc or desc)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"],
+              "default": "asc"
+            }
+          }
+        ],
+        "tags": ["Hotel"],
+        "responses": {
+          "200": {
+            "description": "A list of hotels.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Hotel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new hotel",
+        "operationId": "addHotel",
+        "tags": ["Hotel"],
+        "requestBody": {
+          "description": "Hotel data to add",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Hotel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Hotel created"
+          }
+        }
+      }
+    },
+    "/api/hotels/{id}": {
+      "get": {
+        "summary": "Get a single hotel",
+        "operationId": "getHotel",
+        "tags": ["Hotel"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique id of the hotel to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of a hotel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Hotel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing hotel",
+        "operationId": "updateHotel",
+        "tags": ["Hotel"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique id of the hotel to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated data for the hotel",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Hotel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hotel updated"
+          },
+
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a hotel",
+        "operationId": "deleteHotel",
+        "tags": ["Hotel"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique id of the hotel to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Hotel deleted"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      }
+    },
+    "/api/hotels/{id}/qr-generator": {
+      "get": {
+        "summary": "Generate QR code for a hotel",
+        "operationId": "generateQRCode",
+        "tags": ["Hotel"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique id of the hotel to generate QR code for",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QR code generated"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      }
+    },
+    "/api/hotels/{id}/profile-image": {
+      "post": {
+        "summary": "Upload profile image for a hotel",
+        "operationId": "uploadProfileImage",
+        "tags": ["Hotel"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique id of the hotel to upload profile image for",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Profile image to upload",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile image uploaded"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      }
+    },
+    "/api/auth": {
+      "post": {
+        "summary": "Authenticate user",
+        "operationId": "authUser",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "User credentials",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "doe@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": ["Hotel"],
+                    "example": "Hotel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjEwZjQwZjIzZjIzZjIzZjIzZjIzZjIiLCJpYXQiOjE1OTY5NjIwNzQsImV4cCI6MTU5Njk2NTY3NH0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "summary": "Get current user",
+        "operationId": "getCurrentUser",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Details of the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "5f10f40f23f23f23f23f23f2"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "doe@gmail.com"
+                    },
+                    "role": {
+                      "type": "string",
+                      "example": "Hotel"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2020-07-22T14:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/menus/hotel/{id}": {
+      "get": {
+        "summary": "Get all menu items",
+        "operationId": "getAllMenuItems",
+        "tags": ["Menu Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel to retrieve menu items for"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "A list of menu items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MenuItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/menus/{id}": {
+      "get": {
+        "summary": "Get a menu item by ID",
+        "operationId": "getMenuItemById",
+        "tags": ["Menu Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the menu item to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the menu item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Menu item not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a menu item by ID",
+        "operationId": "updateMenuItemById",
+        "tags": ["Menu Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the menu item to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Menu item updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Menu item not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a menu item by ID",
+        "operationId": "deleteMenuItemById",
+        "tags": ["Menu Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the menu item to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Menu item deleted successfully"
+          },
+          "404": {
+            "description": "Menu item not found"
+          }
+        }
+      }
+    },
+    "/api/menus": {
+      "post": {
+        "summary": "Create a new menu item",
+        "operationId": "createMenuItem",
+        "tags": ["Menu Items"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Menu item created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/menus/{id}/images": {
+      "post": {
+        "summary": "Upload images for a menu item",
+        "operationId": "uploadMenuImages",
+        "tags": ["Menu Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the menu item to upload images for"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Images uploaded successfully"
+          },
+          "404": {
+            "description": "Menu item not found"
+          }
+        }
+      }
+    },
+    "/api/customers": {
+      "get": {
+        "summary": "Retrieve all customers",
+        "operationId": "getAllCustomers",
+        "tags": ["Customers"],
+        "responses": {
+          "200": {
+            "description": "A list of customers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new customer",
+        "operationId": "createCustomer",
+        "tags": ["Customers"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCustomer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Customer created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/customers/{id}": {
+      "get": {
+        "summary": "Retrieve a customer by ID",
+        "operationId": "getCustomerById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the customer to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a customer by ID",
+        "operationId": "updateCustomerById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the customer to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Customer updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a customer by ID",
+        "operationId": "deleteCustomerById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the customer to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer deleted successfully"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/api/customers/{id}/profile-image": {
+      "post": {
+        "summary": "Upload a profile image for a customer by ID",
+        "operationId": "uploadProfileImage",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the customer"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile image uploaded successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/api/chiefs": {
+      "get": {
+        "summary": "Retrieve all Chief accounts",
+        "operationId": "getAllChiefs",
+        "tags": ["Chiefs"],
+        "responses": {
+          "200": {
+            "description": "A list of Chief accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Chief"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Chief account",
+        "operationId": "createChief",
+        "tags": ["Chiefs"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewChief"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chief account created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/chiefs/{id}": {
+      "get": {
+        "summary": "Retrieve a Chief account by ID",
+        "operationId": "getChiefById",
+        "tags": ["Chiefs"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the Chief account to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the Chief account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chief"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Chief account not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a Chief account by ID",
+        "operationId": "updateChiefById",
+        "tags": ["Chiefs"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the Chief account to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChief"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chief account updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Chief account not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Chief account by ID",
+        "operationId": "deleteChiefById",
+        "tags": ["Chiefs"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the Chief account to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chief account deleted successfully"
+          },
+          "404": {
+            "description": "Chief account not found"
+          }
+        }
+      }
+    },
+    "/api/chiefs/{id}/profile-image": {
+      "post": {
+        "summary": "Upload a profile image for a Chief account by ID",
+        "operationId": "uploadChiefProfileImage",
+        "tags": ["Chiefs"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the Chief account"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile image uploaded successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Chief account not found"
+          }
+        }
+      }
+    },
+    "/api/chiefs/{id}/ready": {
+      "post": {
+        "summary": "Set an order as ready for a Chief account",
+        "operationId": "setOrderReadyForChief",
+        "tags": ["Chiefs"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the Chief account"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["orderId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order set as ready successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Chief account not found"
+          }
+        }
+      }
+    },
+    "/api/waiters": {
+      "get": {
+        "summary": "Retrieve all waiters",
+        "operationId": "getAllWaiters",
+        "tags": ["Waiters"],
+        "responses": {
+          "200": {
+            "description": "A list of waiters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Waiter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new waiter",
+        "operationId": "createWaiter",
+        "tags": ["Waiters"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWaiter"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Waiter created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/waiters/{id}": {
+      "get": {
+        "summary": "Retrieve a waiter by ID",
+        "operationId": "getWaiterById",
+        "tags": ["Waiters"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the waiter to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the waiter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Waiter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Waiter not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a waiter by ID",
+        "operationId": "updateWaiterById",
+        "tags": ["Waiters"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the waiter to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWaiter"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Waiter updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Waiter not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a waiter by ID",
+        "operationId": "deleteWaiterById",
+        "tags": ["Waiters"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the waiter to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Waiter deleted successfully"
+          },
+          "404": {
+            "description": "Waiter not found"
+          }
+        }
+      }
+    },
+    "/api/waiters/{id}/profile-image": {
+      "post": {
+        "summary": "Upload a profile image for a waiter by ID",
+        "operationId": "uploadWaiterProfileImage",
+        "tags": ["Waiters"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the waiter"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile image uploaded successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Waiter not found"
+          }
+        }
+      }
+    },
+    "/api/waiters/{id}/confirm": {
+      "post": {
+        "summary": "Confirm an order for a waiter by ID",
+        "operationId": "confirmOrderForWaiter",
+        "tags": ["Waiters"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the waiter"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["orderId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order confirmed successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Waiter not found"
+          }
+        }
+      }
+    },
+    "/api/waiters/{id}/cancel": {
+      "post": {
+        "summary": "Cancel an order for a waiter by ID",
+        "operationId": "cancelOrderForWaiter",
+        "tags": ["Waiters"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the waiter"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["orderId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order cancelled successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Waiter not found"
+          }
+        }
+      }
+    },
+    "/api/orderItems": {
+      "get": {
+        "summary": "Retrieve all order items",
+        "description": "This route retrieves all order items from the database.",
+        "tags": ["Order Items"],
+        "responses": {
+          "200": {
+            "description": "A list of order items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new order item",
+        "description": "This route creates a new order item in the database.",
+        "tags": ["Order Items"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOrderItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order item created successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "400": {
+            "description": "Bad Request: Invalid input data"
+          }
+        }
+      }
+    },
+    "/api/orderItems/{id}": {
+      "get": {
+        "summary": "Retrieve a specific order item by ID",
+        "description": "This route retrieves a specific order item by its ID from the database.",
+        "tags": ["Order Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the order item to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the order item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order item not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an order item by ID",
+        "description": "This route updates an existing order item in the database by its ID.",
+        "tags": ["Order Items"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the order item to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order item updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Order item not found"
+          },
+          "400": {
+            "description": "Bad Request: Invalid input data"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an order item by ID",
+        "description": "This route deletes an order item from the database by its ID.",
+        "tags": ["Order Items"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the order item to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order item deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Order item not found"
+          }
+        }
+      }
+    },
+
+    "/api/orders": {
+      "get": {
+        "summary": "Retrieve all orders",
+        "description": "This route retrieves all orders from the database.",
+        "tags": ["Orders"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new order",
+        "description": "This route creates a new order in the database.",
+        "tags": ["Orders"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "400": {
+            "description": "Bad Request: Invalid input data"
+          }
+        }
+      }
+    },
+    "/api/orders/{id}": {
+      "get": {
+        "summary": "Retrieve a specific order by ID",
+        "description": "This route retrieves a specific order by its ID from the database.",
+        "tags": ["Orders"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the order to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a specific order by ID",
+        "description": "This route updates a specific order by its ID in the database.",
+        "tags": ["Orders"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the order to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Order not found"
+          },
+          "400": {
+            "description": "Bad Request: Invalid input data"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a specific order by ID",
+        "description": "This route deletes a specific order by its ID from the database.",
+        "tags": ["Orders"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the order to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      }
+    },
+    "/api/hotels/{hotelId}/tables": {
+      "get": {
+        "summary": "Retrieve all tables for a specific hotel",
+        "description": "This route retrieves all tables for a specific hotel.",
+        "tags": ["Tables"],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel to retrieve tables for"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of tables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Table"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new table for a specific hotel",
+        "description": "This route creates a new table for a specific hotel.",
+        "tags": ["Tables"],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel to create the table for"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTable"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Table created successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "400": {
+            "description": "Bad Request: Invalid input data"
+          },
+          "404": {
+            "description": "Hotel not found"
+          }
+        }
+      }
+    },
+    "/api/hotels/{hotelId}/tables/{id}": {
+      "get": {
+        "summary": "Retrieve a specific table by ID for a specific hotel",
+        "description": "This route retrieves a specific table by its ID for a specific hotel.",
+        "tags": ["Tables"],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel to retrieve the table for"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the table to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the table",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Table"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Table not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a specific table by ID for a specific hotel",
+        "description": "This route updates a specific table by its ID for a specific hotel.",
+        "tags": ["Tables"],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel that the table belongs to"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the table to update"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTable"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Table updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Table not found"
+          },
+          "400": {
+            "description": "Bad Request: Invalid input data"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a specific table by ID for a specific hotel",
+        "description": "This route deletes a specific table by its ID for a specific hotel.",
+        "tags": ["Tables"],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel that the table belongs to"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the table to delete"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Table deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Table not found"
+          }
+        }
+      }
+    },
+    "/api/hotels/{hotelId}/tables/{id}/qr-generator": {
+      "get": {
+        "summary": "Generate QR code for a specific table in a specific hotel",
+        "description": "This route generates a QR code for a specific table in a specific hotel.",
+        "tags": ["Tables"],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the hotel that the table belongs to"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the table to generate QR code for"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QR code generated successfully"
+          },
+          "401": {
+            "description": "Unauthorized: Authentication token missing or invalid"
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions"
+          },
+          "404": {
+            "description": "Table not found"
+          }
+        }
+      }
+    }
+  }
+}
